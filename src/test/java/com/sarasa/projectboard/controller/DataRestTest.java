@@ -1,5 +1,6 @@
 package com.sarasa.projectboard.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled("Spring Data REST 통합 테스트는 학습용 테스트이므로 제외")
 @DisplayName("Data REST - API 테스트")
 @Transactional // 테스트이므로 DB에 영향을 미치지 않기 위해 롤백해줘야 함
 @AutoConfigureMockMvc // MockMvc 사용하기 위해서 추가해줘야 함
