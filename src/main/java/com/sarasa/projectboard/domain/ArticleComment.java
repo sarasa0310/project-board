@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(indexes = {
         @Index(columnList = "content"),
         @Index(columnList = "createdAt"),
-        @Index(columnList = "createdBy"),
+        @Index(columnList = "createdBy")
 })
 @Entity
 public class ArticleComment extends AuditingFields {

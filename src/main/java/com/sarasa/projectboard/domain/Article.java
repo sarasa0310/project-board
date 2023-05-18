@@ -15,7 +15,7 @@ import java.util.Set;
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
         @Index(columnList = "createdAt"),
-        @Index(columnList = "createdBy"),
+        @Index(columnList = "createdBy")
 })
 @Entity
 public class Article extends AuditingFields {
