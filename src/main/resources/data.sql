@@ -1,5 +1,5 @@
 -- 1 테스트 계정
-insert into user_account (username, password, email, nickname, memo, created_by, modified_by, created_at, modified_at) values
+insert into user_account (username, password, email, nickname, memo, created_at, created_by, modified_at, modified_by) values
 ('jimmy', 'abcd1234', 'jimmy@gmail.com', 'saul goodman', 'better call saul!', now(), 'jimmy', now(), 'jimmy');
 
 -- 123 게시글
