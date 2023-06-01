@@ -19,7 +19,11 @@ public interface ArticleRepository extends
         QuerydslBinderCustomizer<QArticle> // 커스텀 쿼리 작성 가능
 {
 
-    Page<Article> findByTitle(String title, Pageable pageable);
+    Page<Article> findByTitleContaining(String title, Pageable pageable);
+    Page<Article> findByContentContaining(String content, Pageable pageable);
+    Page<Article> findByUserAccount_UsernameContaining(String username, Pageable pageable);
+    Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
+    Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
