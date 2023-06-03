@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("게시글 서비스 테스트")
+@DisplayName("비즈니스 로직 - 게시글")
 class ArticleServiceTest {
 
     @InjectMocks
