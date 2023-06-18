@@ -1,10 +1,12 @@
 package com.sarasa.projectboard.service;
 
 import com.sarasa.projectboard.domain.Article;
+import com.sarasa.projectboard.domain.UserAccount;
 import com.sarasa.projectboard.domain.type.SearchType;
 import com.sarasa.projectboard.dto.ArticleDto;
 import com.sarasa.projectboard.dto.ArticleWithCommentsDto;
 import com.sarasa.projectboard.repository.ArticleRepository;
+import com.sarasa.projectboard.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticles(SearchType searchType, String keyword, Pageable pageable) {
@@ -52,19 +55,29 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleWithCommentsDto getArticle(Long articleId) {
+    public ArticleWithCommentsDto getArticleWithComments(Long articleId) {
         return articleRepository.findById(articleId)
                 .map(ArticleWithCommentsDto::from)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
     }
 
-    public void saveArticle(ArticleDto articleDto) {
-        articleRepository.save(articleDto.toEntity());
+    @Transactional(readOnly = true)
+    public ArticleDto getArticle(Long articleId) {
+        return articleRepository.findById(articleId)
+                .map(ArticleDto::from)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
     }
 
-    public void updateArticle(ArticleDto articleDto) {
+    public void saveArticle(ArticleDto articleDto) {
+        UserAccount userAccount =
+                userAccountRepository.getReferenceById(articleDto.userAccountDto().id());
+
+        articleRepository.save(articleDto.toEntity(userAccount));
+    }
+
+    public void updateArticle(Long articleId, ArticleDto articleDto) {
         try {
-            Article article = articleRepository.getReferenceById(articleDto.id());
+            Article article = articleRepository.getReferenceById(articleId);
 
             if (articleDto.title() != null) article.setTitle(articleDto.title());
             if (articleDto.content() != null) article.setContent(articleDto.content());
@@ -76,6 +89,10 @@ public class ArticleService {
 
     public void deleteArticle(Long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    public long getArticleCount() {
+        return articleRepository.count();
     }
 
 }

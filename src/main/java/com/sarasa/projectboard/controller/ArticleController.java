@@ -1,6 +1,9 @@
 package com.sarasa.projectboard.controller;
 
+import com.sarasa.projectboard.domain.UserAccount;
+import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
+import com.sarasa.projectboard.dto.request.ArticleRequest;
 import com.sarasa.projectboard.response.ArticleResponse;
 import com.sarasa.projectboard.response.ArticleWithCommentsResponse;
 import com.sarasa.projectboard.service.ArticleService;
@@ -12,10 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class ArticleController {
     public String getOneArticle(ModelMap map,
                                 @PathVariable("article-id") Long articleId) {
         ArticleWithCommentsResponse article =
-                ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
+                ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
 
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponses());
@@ -60,9 +60,9 @@ public class ArticleController {
     }
 
     @GetMapping("/search-hashtag")
-    public String searchHashtag(@RequestParam(required = false) String searchValue,
-                                @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                ModelMap map) {
+    public String searchArticleHashtag(@RequestParam(required = false) String searchValue,
+                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                       ModelMap map) {
         Page<ArticleResponse> articleResponsePage =
                 articleService.searchArticlesViaHashtag(searchValue, pageable)
                         .map(ArticleResponse::from);
@@ -78,6 +78,55 @@ public class ArticleController {
         map.addAttribute("hashtags", hashtags);
 
         return "articles/search-hashtag";
+    }
+
+    @GetMapping("/form")
+    public String articleForm(ModelMap map) {
+        map.addAttribute("formStatus", FormStatus.CREATE);
+
+        return "articles/form";
+    }
+
+    @PostMapping("/form")
+    public String postNewArticle(ArticleRequest articleRequest) {
+        articleService.saveArticle(articleRequest.toDto(
+                UserAccount.of(
+                        "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
+                )
+        ));
+
+        return "redirect:/articles";
+    }
+
+    @GetMapping("/{article-id}/form")
+    public String updateArticleForm(@PathVariable("article-id") Long articleId, ModelMap map) {
+        ArticleResponse article =
+                ArticleResponse.from(articleService.getArticleWithComments(articleId));
+
+        map.addAttribute("article", article);
+        map.addAttribute("formStatus", FormStatus.UPDATE);
+
+        return "articles/form";
+    }
+
+    @PostMapping("/{article-id}/form")
+    public String updateArticle(@PathVariable("article-id") Long articleId, ArticleRequest articleRequest) {
+        // todo: 인증 정보 추가
+        articleService.updateArticle(articleId, articleRequest.toDto(
+                UserAccount.of(
+                        "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
+                )
+        ));
+
+        return "redirect:/articles/" + articleId;
+    }
+
+    @PostMapping("/{article-id}/delete")
+    public String deleteArticle(@PathVariable("article-id") Long articleId) {
+        // todo: 인증 정보 추가
+        articleService.deleteArticle(articleId);
+
+        return "redirect:/articles";
     }
 
 }
