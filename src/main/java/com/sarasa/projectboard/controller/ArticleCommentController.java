@@ -21,7 +21,7 @@ public class ArticleCommentController {
         // todo: 인증 정보 추가
         articleCommentService.saveArticleComment(
                 articleCommentRequest.toDto(UserAccountDto.of(
-                        "jimmy", "abcd1234", "jimmy@gmail.com", null, null
+                        "jimmy", "abcd1234", "jimmy@gmail.com", "Jimmy", "I am jimmy."
                 ))
         );
 
