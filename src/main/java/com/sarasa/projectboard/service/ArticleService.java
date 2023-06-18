@@ -35,7 +35,7 @@ public class ArticleService {
         return switch (searchType) {
             case TITLE -> articleRepository.findByTitleContaining(keyword, pageable).map(ArticleDto::from);
             case CONTENT -> articleRepository.findByContentContaining(keyword, pageable).map(ArticleDto::from);
-            case ID -> articleRepository.findByUserAccount_UsernameContaining(keyword, pageable).map(ArticleDto::from);
+            case ID -> articleRepository.findByUserAccount_UserIdContaining(keyword, pageable).map(ArticleDto::from);
             case NICKNAME -> articleRepository.findByUserAccount_NicknameContaining(keyword, pageable).map(ArticleDto::from);
             case HASHTAG -> articleRepository.findByHashtag("#" + keyword, pageable).map(ArticleDto::from);
         };
@@ -70,7 +70,7 @@ public class ArticleService {
 
     public void saveArticle(ArticleDto articleDto) {
         UserAccount userAccount =
-                userAccountRepository.getReferenceById(articleDto.userAccountDto().username());
+                userAccountRepository.getReferenceById(articleDto.userAccountDto().userId());
 
         articleRepository.save(articleDto.toEntity(userAccount));
     }

@@ -37,7 +37,7 @@ public class Article extends AuditingFields {
 
     @Setter
     @ManyToOne(optional = false)
-    @JoinColumn(name = "username")
+    @JoinColumn(name = "userId")
     private UserAccount userAccount;
 
     @ToString.Exclude

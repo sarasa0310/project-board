@@ -5,7 +5,7 @@ import com.sarasa.projectboard.domain.UserAccount;
 import java.time.LocalDateTime;
 
 public record UserAccountDto(
-        String username,
+        String userId,
         String password,
         String email,
         String nickname,
@@ -16,17 +16,17 @@ public record UserAccountDto(
         String modifiedBy
 ) {
 
-    public static UserAccountDto of(String username, String password, String email, String nickname, String memo) {
-        return new UserAccountDto(username, password, email, nickname, memo, null, null, null, null);
+    public static UserAccountDto of(String userId, String password, String email, String nickname, String memo) {
+        return new UserAccountDto(userId, password, email, nickname, memo, null, null, null, null);
     }
 
-    public static UserAccountDto of(String username, String password, String email, String nickname, String memo, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
-        return new UserAccountDto(username, password, email, nickname, memo, createdAt, createdBy, modifiedAt, modifiedBy);
+    public static UserAccountDto of(String userId, String password, String email, String nickname, String memo, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+        return new UserAccountDto(userId, password, email, nickname, memo, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     public static UserAccountDto from(UserAccount entity) {
         return new UserAccountDto(
-                entity.getUsername(),
+                entity.getUserId(),
                 entity.getPassword(),
                 entity.getEmail(),
                 entity.getNickname(),
@@ -40,7 +40,7 @@ public record UserAccountDto(
 
     public UserAccount toEntity() {
         return UserAccount.of(
-                username,
+                userId,
                 password,
                 email,
                 nickname,

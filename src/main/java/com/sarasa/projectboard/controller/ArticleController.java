@@ -1,6 +1,5 @@
 package com.sarasa.projectboard.controller;
 
-import com.sarasa.projectboard.domain.UserAccount;
 import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
 import com.sarasa.projectboard.dto.UserAccountDto;
