@@ -1,7 +1,6 @@
 package com.sarasa.projectboard.controller;
 
 import com.sarasa.projectboard.config.SecurityConfig;
-import com.sarasa.projectboard.controller.ArticleController;
 import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
 import com.sarasa.projectboard.dto.ArticleDto;
