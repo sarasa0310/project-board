@@ -2,9 +2,11 @@ package com.sarasa.projectboard.service;
 
 import com.sarasa.projectboard.domain.Article;
 import com.sarasa.projectboard.domain.ArticleComment;
+import com.sarasa.projectboard.domain.UserAccount;
 import com.sarasa.projectboard.dto.ArticleCommentDto;
 import com.sarasa.projectboard.repository.ArticleCommentRepository;
 import com.sarasa.projectboard.repository.ArticleRepository;
+import com.sarasa.projectboard.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,20 +26,23 @@ public class ArticleCommentService {
 
     private final ArticleCommentRepository articleCommentRepository;
 
+    private final UserAccountRepository userAccountRepository;
+
     @Transactional(readOnly = true)
     public List<ArticleCommentDto> getArticleComments(Long articleId) {
         return articleCommentRepository.findByArticle_Id(articleId)
                 .stream()
                 .map(ArticleCommentDto::from)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public void saveArticleComment(ArticleCommentDto dto) {
         try {
             Article article = articleRepository.getReferenceById(dto.articleId());
-            articleCommentRepository.save(dto.toEntity(article));
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+            articleCommentRepository.save(dto.toEntity(article, userAccount));
         } catch (EntityNotFoundException e) {
-            log.warn("댓글 저장 실패. 댓글의 게시글을 찾을 수 없습니다 - dto: {}", dto);
+            log.warn("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}", e.getLocalizedMessage());
         }
     }
 

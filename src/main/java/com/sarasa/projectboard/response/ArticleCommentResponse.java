@@ -19,7 +19,7 @@ public record ArticleCommentResponse(
     public static ArticleCommentResponse from(ArticleCommentDto dto) {
         String nickname = dto.userAccountDto().nickname();
         if (nickname == null || nickname.isBlank()) {
-            nickname = dto.userAccountDto().username();
+            nickname = dto.userAccountDto().userId();
         }
 
         return new ArticleCommentResponse(

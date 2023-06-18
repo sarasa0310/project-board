@@ -4,6 +4,7 @@
     <attr sel="#footer" th:replace="footer :: footer" />
 
     <attr sel="main" th:object="${articles}">
+        <attr sel="#search-form" th:action="@{/articles}" th:method="get" />
         <attr sel="#search-type" th:remove="all-but-first">
             <attr sel="option[0]"
                   th:each="searchType : ${searchTypes}"
@@ -30,7 +31,7 @@
         )}"/>
                 <attr sel="th.user-id/a" th:text="'작성자'" th:href="@{/articles(
             page=${articles.number},
-            sort='userAccount.username' + (*{sort.getOrderFor('userAccount.username')} != null ? (*{sort.getOrderFor('userAccount.username').direction.name} != 'DESC' ? ',desc' : '') : ''),
+            sort='userAccount.userId' + (*{sort.getOrderFor('userAccount.userId')} != null ? (*{sort.getOrderFor('userAccount.userId').direction.name} != 'DESC' ? ',desc' : '') : ''),
             searchType=${param.searchType},
             searchValue=${param.searchValue}
         )}"/>
@@ -52,6 +53,7 @@
             </attr>
         </attr>
 
+        <attr sel="#write-article" th:href="@{/articles/form}" />
         <attr sel="#pagination">
             <attr sel="li[0]/a"
                   th:text="'previous'"
