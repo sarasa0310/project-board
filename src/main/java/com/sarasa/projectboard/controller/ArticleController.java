@@ -3,6 +3,7 @@ package com.sarasa.projectboard.controller;
 import com.sarasa.projectboard.domain.UserAccount;
 import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
+import com.sarasa.projectboard.dto.UserAccountDto;
 import com.sarasa.projectboard.dto.request.ArticleRequest;
 import com.sarasa.projectboard.response.ArticleResponse;
 import com.sarasa.projectboard.response.ArticleWithCommentsResponse;
@@ -90,7 +91,7 @@ public class ArticleController {
     @PostMapping("/form")
     public String postNewArticle(ArticleRequest articleRequest) {
         articleService.saveArticle(articleRequest.toDto(
-                UserAccount.of(
+                UserAccountDto.of(
                         "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
                 )
         ));
@@ -101,7 +102,7 @@ public class ArticleController {
     @GetMapping("/{article-id}/form")
     public String updateArticleForm(@PathVariable("article-id") Long articleId, ModelMap map) {
         ArticleResponse article =
-                ArticleResponse.from(articleService.getArticleWithComments(articleId));
+                ArticleResponse.from(articleService.getArticle(articleId));
 
         map.addAttribute("article", article);
         map.addAttribute("formStatus", FormStatus.UPDATE);
@@ -113,7 +114,7 @@ public class ArticleController {
     public String updateArticle(@PathVariable("article-id") Long articleId, ArticleRequest articleRequest) {
         // todo: 인증 정보 추가
         articleService.updateArticle(articleId, articleRequest.toDto(
-                UserAccount.of(
+                UserAccountDto.of(
                         "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
                 )
         ));

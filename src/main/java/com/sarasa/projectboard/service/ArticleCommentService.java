@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,7 +29,7 @@ public class ArticleCommentService {
         return articleCommentRepository.findByArticle_Id(articleId)
                 .stream()
                 .map(ArticleCommentDto::from)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public void saveArticleComment(ArticleCommentDto dto) {
