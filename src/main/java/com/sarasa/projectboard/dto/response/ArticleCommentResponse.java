@@ -1,4 +1,4 @@
-package com.sarasa.projectboard.response;
+package com.sarasa.projectboard.dto.response;
 
 import com.sarasa.projectboard.dto.ArticleCommentDto;
 
