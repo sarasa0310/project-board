@@ -1,6 +1,7 @@
 package com.sarasa.projectboard.controller;
 
 import com.sarasa.projectboard.config.SecurityConfig;
+import com.sarasa.projectboard.config.TestSecurityConfig;
 import com.sarasa.projectboard.dto.ArticleCommentDto;
 import com.sarasa.projectboard.dto.request.ArticleCommentRequest;
 import com.sarasa.projectboard.service.ArticleCommentService;
@@ -12,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
@@ -24,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 댓글")
-@Import({SecurityConfig.class, FormDataEncoder.class})
+@Import({TestSecurityConfig.class, FormDataEncoder.class})
 @WebMvcTest(ArticleCommentController.class)
 public class ArticleCommentControllerTest {
 
@@ -40,6 +43,7 @@ public class ArticleCommentControllerTest {
         this.formDataEncoder = formDataEncoder;
     }
 
+    @WithUserDetails(value = "jimmyTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 댓글 등록 - 정상 호출")
     @Test
     void givenArticleCommentInfo_whenRequesting_thenSavesNewArticleComment() throws Exception {
@@ -63,14 +67,16 @@ public class ArticleCommentControllerTest {
         then(articleCommentService).should().saveArticleComment(any(ArticleCommentDto.class));
     }
 
+    @WithUserDetails(value = "jimmyTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][GET] 댓글 삭제 - 정상 호출")
     @Test
     void givenArticleCommentIdToDelete_whenRequesting_thenDeletesArticleComment() throws Exception {
         // Given
         long articleId = 1L;
         long articleCommentId = 1L;
+        String userId = "jimmyTest";
 
-        willDoNothing().given(articleCommentService).deleteArticleComment(articleCommentId);
+        willDoNothing().given(articleCommentService).deleteArticleComment(articleCommentId ,userId);
 
         // When & Then
         mvc.perform(
@@ -83,7 +89,7 @@ public class ArticleCommentControllerTest {
                 .andExpect(view().name("redirect:/articles/" + articleId))
                 .andExpect(redirectedUrl("/articles/" + articleId));
 
-        then(articleCommentService).should().deleteArticleComment(articleCommentId);
+        then(articleCommentService).should().deleteArticleComment(articleCommentId, userId);
     }
 
 }
