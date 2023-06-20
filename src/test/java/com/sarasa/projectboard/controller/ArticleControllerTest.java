@@ -1,6 +1,5 @@
 package com.sarasa.projectboard.controller;
 
-import com.sarasa.projectboard.config.SecurityConfig;
 import com.sarasa.projectboard.config.TestSecurityConfig;
 import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
@@ -8,7 +7,7 @@ import com.sarasa.projectboard.dto.ArticleDto;
 import com.sarasa.projectboard.dto.ArticleWithCommentsDto;
 import com.sarasa.projectboard.dto.UserAccountDto;
 import com.sarasa.projectboard.dto.request.ArticleRequest;
-import com.sarasa.projectboard.response.ArticleResponse;
+import com.sarasa.projectboard.dto.response.ArticleResponse;
 import com.sarasa.projectboard.service.ArticleService;
 import com.sarasa.projectboard.service.PaginationService;
 import com.sarasa.projectboard.util.FormDataEncoder;
