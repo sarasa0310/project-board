@@ -2,8 +2,8 @@ package com.sarasa.projectboard.controller;
 
 import com.sarasa.projectboard.domain.constant.FormStatus;
 import com.sarasa.projectboard.domain.type.SearchType;
-import com.sarasa.projectboard.dto.UserAccountDto;
 import com.sarasa.projectboard.dto.request.ArticleRequest;
+import com.sarasa.projectboard.dto.security.BoardPrincipal;
 import com.sarasa.projectboard.response.ArticleResponse;
 import com.sarasa.projectboard.response.ArticleWithCommentsResponse;
 import com.sarasa.projectboard.service.ArticleService;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -88,12 +89,9 @@ public class ArticleController {
     }
 
     @PostMapping("/form")
-    public String postNewArticle(ArticleRequest articleRequest) {
-        articleService.saveArticle(articleRequest.toDto(
-                UserAccountDto.of(
-                        "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
-                )
-        ));
+    public String postNewArticle(ArticleRequest articleRequest,
+                                 @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
+        articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles";
     }
@@ -110,21 +108,18 @@ public class ArticleController {
     }
 
     @PostMapping("/{article-id}/form")
-    public String updateArticle(@PathVariable("article-id") Long articleId, ArticleRequest articleRequest) {
-        // todo: 인증 정보 추가
-        articleService.updateArticle(articleId, articleRequest.toDto(
-                UserAccountDto.of(
-                        "jimmy", "abcd1234", "jimmy@gmail.com", "jimmy", "memo"
-                )
-        ));
+    public String updateArticle(@PathVariable("article-id") Long articleId,
+                                @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+                                ArticleRequest articleRequest) {
+        articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleId;
     }
 
     @PostMapping("/{article-id}/delete")
-    public String deleteArticle(@PathVariable("article-id") Long articleId) {
-        // todo: 인증 정보 추가
-        articleService.deleteArticle(articleId);
+    public String deleteArticle(@PathVariable("article-id") Long articleId,
+                                @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
+        articleService.deleteArticle(articleId, boardPrincipal.getUsername());
 
         return "redirect:/articles";
     }
